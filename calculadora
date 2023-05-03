@@ -1,0 +1,48 @@
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+
+
+public class CalculatorServlet extends HttpServlet {
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        doPost(request, response);
+    }
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        try {
+            double a = Double.parseDouble(request.getParameter("a"));
+            double b = Double.parseDouble(request.getParameter("b"));
+            String operation = request.getParameter("operation");
+            double result = calc(a, b, operation);
+            response.getWriter().println("a " + operation + " b = " + result);
+
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        } catch (WrongOperationException e) {
+            response.getWriter().println(e.getMessage());
+        }
+    }
+
+    public double calc(double a, double b, String operation) throws WrongOperationException, ArithmeticException {
+
+        switch (operation) {
+            case "add":
+                return (a + b);
+            case "deduct":
+                return (a - b);
+            case "divide":
+                return (a / b);
+            case "multiply":
+                return (a * b);
+            default:
+                throw new WrongOperationException();
+        }
+    }
+}
